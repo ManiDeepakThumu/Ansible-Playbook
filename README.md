@@ -25,10 +25,10 @@ As soon as the login is successful with the given credentials, it starts pulling
 Once the image is pulled successfully, it starts to spin the container with name nginx-example-docker in port 443
 
 To confirm if nginx image is pulled successfully, run
-docker images
+"docker images"
 
 To confirm if a container is spinned up to run nginx docker image, run
-docker ps -a
+"docker ps -a"
 
 Here, you can be able to see docker container with name as nginx-example-docker running in the port 443.
 
