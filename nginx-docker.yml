@@ -1,0 +1,64 @@
+---
+- name: Install required system packages
+  apt:
+    pkg:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - software-properties-common
+      - python3-pip
+      - virtualenv
+      - python3-setuptools
+    state: latest
+    update_cache: true
+
+- name: Add Docker GPG apt Key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add Docker Repository
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu jammy stable
+    state: present
+
+- name: Update apt and install docker-ce and docker-compose
+  apt:
+    pkg:
+      - docker-ce
+      - docker-compose
+  state: latest
+  update_cache: true
+
+- name: Install Docker Module for Python
+  pip:
+    name: docker
+
+- name: Log into Docker registry
+  docker_login:
+    username: "{{ docker_registry_username }}"
+    password: "{{ docker_registry_password }}"
+
+- name: Install nginx container
+  become: 'yes'
+  docker_container:
+    name: nginx-example-docker
+    image: nginx
+    state: started
+    restart: 'yes'
+    ports:
+      - "443:80"
+    cap_drop: all
+    capabilities:
+      - chown
+      - dac_override
+      - net_bind_service
+      - setgid
+      - setuid
+    volumes:
+      - "/etc/nginx/:/etc/nginx/:ro"
+      - "/etc/nginx/www/{{ ansible_hostname }}:/var/www/{{ ansible_hostname }}:ro"
+      - "/etc/nginx/log:/var/log/nginx"
+    pull: 'yes'
+    restart_policy: on-failure
+    restart_retries: 3
