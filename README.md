@@ -2,7 +2,7 @@
 This Ansible playbook is designed to set up an Nginx Docker container on an Ubuntu 22.04 EC2 instance.
 
 # Requirements 
-An Ubuntu 22.04 EC2 instance in running state.
+*An Ubuntu 22.04 EC2 instance in running state.
 Ensure Ansible is installed on EC2 instance.
 Docker registry credentials (username and password).
 
